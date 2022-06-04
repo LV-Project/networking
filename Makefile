@@ -17,3 +17,7 @@ fmt:
 
 plan: 
 	@terraform plan -out main.tfplan
+
+.PHONY: apply
+apply:
+	@terraform apply 

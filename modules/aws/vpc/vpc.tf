@@ -10,7 +10,7 @@ resource "aws_vpc" "vpc" {
 resource "aws_subnet" "vpc_private_subnets" {
   for_each = var.private_subnet_numbers
   vpc_id = aws_vpc.vpc.id
-  cidr_block = each.value
+  cidr_block = var.private_subnet_numbers[each.key]
 
   tags={
       Name = "module-${var.infra_env}-private-subnet"
@@ -23,7 +23,7 @@ resource "aws_subnet" "vpc_private_subnets" {
 resource "aws_subnet" "vpc_public_subnets" {
   for_each = var.public_subnet_numbers
   vpc_id = aws_vpc.vpc.id
-  cidr_block = each.value
+  cidr_block = var.public_subnet_numbers[each.key]
 
   tags ={
       Name = "module-${var.infra_env}-public-subnet"
@@ -54,8 +54,3 @@ resource "aws_route_table" "rt_Leo" {
   }
 }
 
-resource "aws_route_table_association" "Leo_rt_assoc_igw" {
-  for_each = var.public_subnet_numbers
-  subnet_id      = aws_subnet.vpc_public_subnets[each.key].id
-  route_table_id = aws_route_table.rt_Leo.id
-}
